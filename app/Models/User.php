@@ -16,9 +16,16 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'state',
+        'functionary_id',
     ];
 
     protected $hidden = [
         'password'
     ];
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class);
+    }
 }

@@ -22,14 +22,18 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed'
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+         $request->merge([
+            'state' => $request->state ?? 'active',
         ]);
 
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
-        // $user->password = bcrypt($request->password);
         $user->password = Hash::make($request->password);
+        $user->state = $request->state;
         $user->save();
 
         return response($user, HttpFoundationResponse::HTTP_CREATED);
@@ -60,14 +64,14 @@ class AuthController extends Controller
         $cokkie = Cookie::forget('cookie_token');
 
         return response()->json([
-            'message' => 'Sesión cerrada correctamente'
+            'message' => 'Sesión cerrada correctamente!'
         ]);
     }
     //userprofile
     public function userProfile(Request $request)
     {
         return response()->json([
-            'message' => "userProfile ok",
+            'message' => "Ssuario logueado",
             'userData' => $request->user(),
         ], HttpFoundationResponse::HTTP_OK);
     }
